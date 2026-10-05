@@ -69,16 +69,28 @@ function home() {
         </p>
 
         <div class="actions">
-          <button class="primary" onclick="go('library')">شروع مطالعه</button>
-          <button class="primary" onclick="go('notes')">نوشتن یادداشت</button>
+          <button class="primary" onclick="go('library')">
+            شروع مطالعه
+          </button>
+
+          <button class="primary" onclick="go('notes')">
+            نوشتن یادداشت
+          </button>
         </div>
       </div>
 
       <div class="quote">
         <b>یادآوری امروز</b>
-        <div>«من در لحظه زندگی می‌کنم، نه برای تصویر ساختن در ذهن مردم.»</div>
+
+        <div>
+          «من در لحظه زندگی می‌کنم، نه برای تصویر ساختن در ذهن مردم.»
+        </div>
+
         <hr>
-        <div>وقار · شخصیت · اطمینان به نفس</div>
+
+        <div>
+          وقار · شخصیت · اطمینان به نفس
+        </div>
       </div>
     </section>
 
@@ -86,23 +98,40 @@ function home() {
       <h2>شروع سریع</h2>
 
       <div class="cards">
+
         <div class="card">
           <h3>📚 کتابخانه</h3>
-          <p class="muted">کتاب‌ها را بر اساس موضوع پیدا کن و مطالعه را شروع کن.</p>
-          <button onclick="go('library')">رفتن به کتابخانه</button>
+          <p class="muted">
+            کتاب‌ها را بر اساس موضوع پیدا کن و مطالعه را شروع کن.
+          </p>
+
+          <button onclick="go('library')">
+            رفتن به کتابخانه
+          </button>
         </div>
 
         <div class="card">
           <h3>📝 یادداشت‌ها</h3>
-          <p class="muted">هرچه از مطالعه می‌آموزی همین‌جا ثبت و ذخیره کن.</p>
-          <button onclick="go('notes')">یادداشت‌ها</button>
+          <p class="muted">
+            هرچه از مطالعه می‌آموزی همین‌جا ثبت و ذخیره کن.
+          </p>
+
+          <button onclick="go('notes')">
+            یادداشت‌ها
+          </button>
         </div>
 
         <div class="card">
           <h3>🌱 رشد فردی</h3>
-          <p class="muted">برای ساختن ذهن و شخصیت بهتر، مطالعه را پیوسته نگه دار.</p>
-          <button onclick="go('growth')">رشد فردی</button>
+          <p class="muted">
+            برای ساختن ذهن و شخصیت بهتر، مطالعه را پیوسته نگه دار.
+          </p>
+
+          <button onclick="go('growth')">
+            رشد فردی
+          </button>
         </div>
+
       </div>
     </section>
   `;
@@ -138,7 +167,9 @@ function drawBooks(list) {
 
   if (!list.length) {
     box.innerHTML = `
-      <div class="card">کتابی پیدا نشد.</div>
+      <div class="card">
+        کتابی پیدا نشد.
+      </div>
     `;
     return;
   }
@@ -195,7 +226,7 @@ function filterBooks() {
   drawBooks(result);
 }
 
-/* باز کردن صفحه واقعی کتاب در قائمیه */
+/* صفحه مطالعه */
 function readBook(id) {
   const book = books.find(item => item[0] === id);
 
@@ -204,10 +235,82 @@ function readBook(id) {
     return;
   }
 
+  /* کتاب 15803 */
+  if (id === '15803') {
+    app.innerHTML = `
+      <button
+        class="back"
+        onclick="go('library')"
+      >
+        ← بازگشت به کتابخانه
+      </button>
+
+      <h2>📖 ${book[1]}</h2>
+
+      <div class="card" style="text-align:center;padding:35px">
+
+        <div style="font-size:52px">
+          📚
+        </div>
+
+        <h3>
+          ${book[1]}
+        </h3>
+
+        <p class="muted">
+          نویسنده: سید محمد حسینی بهارانچی
+        </p>
+
+        <p class="muted">
+          برای مطالعه، یکی از گزینه‌های زیر را انتخاب کن.
+        </p>
+
+        <div
+          style="
+            display:flex;
+            flex-wrap:wrap;
+            gap:12px;
+            justify-content:center;
+            margin-top:25px;
+          "
+        >
+
+          <button
+            class="primary"
+            onclick="openBookOfficial()"
+          >
+            📖 نسخه قائمیه
+          </button>
+
+          <button
+            onclick="openBookAlternative()"
+          >
+            📚 نسخه جایگزین
+          </button>
+
+        </div>
+
+        <p
+          class="muted"
+          style="margin-top:20px"
+        >
+          اگر نسخه قائمیه در شبکه شما باز نشد،
+          نسخه جایگزین را امتحان کن.
+        </p>
+
+      </div>
+    `;
+    return;
+  }
+
+  /* سایر کتاب‌ها */
   const url = 'https://www.ghbook.ir/Book/' + id;
 
   app.innerHTML = `
-    <button class="back" onclick="go('library')">
+    <button
+      class="back"
+      onclick="go('library')"
+    >
       ← بازگشت به کتابخانه
     </button>
 
@@ -215,7 +318,9 @@ function readBook(id) {
 
     <div class="card" style="text-align:center;padding:35px">
 
-      <div style="font-size:48px">📚</div>
+      <div style="font-size:48px">
+        📚
+      </div>
 
       <h3>${book[1]}</h3>
 
@@ -223,13 +328,9 @@ function readBook(id) {
         شناسه کتاب: ${book[0]}
       </p>
 
-      <p class="muted">
-        برای ورود به صفحه اصلی کتاب، دکمه زیر را بزن.
-      </p>
-
       <button
         class="primary"
-        onclick="openBook('${id}')"
+        onclick="window.open('${url}', '_blank')"
       >
         📖 مطالعه کتاب
       </button>
@@ -238,14 +339,20 @@ function readBook(id) {
   `;
 }
 
-function openBook(id) {
-  const url = 'https://www.ghbook.ir/Book/' + id;
+/* لینک رسمی قائمیه برای کتاب 15803 */
+function openBookOfficial() {
+  const url =
+    'https://www.ghbook.ir/Book/15803';
 
-  const newWindow = window.open(url, '_blank');
+  window.open(url, '_blank');
+}
 
-  if (!newWindow) {
-    window.location.href = url;
-  }
+/* نسخه جایگزین آنلاین */
+function openBookAlternative() {
+  const url =
+    'https://www.scribd.com/document/937913982/Az-Quran-Shafa-Bigirim-Softgozar-com';
+
+  window.open(url, '_blank');
 }
 
 function notes() {
@@ -261,7 +368,9 @@ function notes() {
     currentNote = null;
   }
 
-  const selected = list.find(note => note.id === currentNote);
+  const selected = list.find(
+    note => note.id === currentNote
+  );
 
   app.innerHTML = `
     <h2>📝 یادداشت‌های من</h2>
@@ -274,27 +383,37 @@ function notes() {
 
       <aside class="note-list">
 
-        <button onclick="newNote()">＋ یادداشت جدید</button>
+        <button onclick="newNote()">
+          ＋ یادداشت جدید
+        </button>
 
         <div id="noteList">
+
           ${
             list.map(note => `
               <div
-                class="note-item ${note.id === currentNote ? 'sel' : ''}"
+                class="note-item ${
+                  note.id === currentNote ? 'sel' : ''
+                }"
                 onclick="selectNote('${note.id}')"
               >
-                <b>${note.title || 'بدون عنوان'}</b>
+                <b>
+                  ${note.title || 'بدون عنوان'}
+                </b>
 
                 <div class="muted">
-                  ${new Date(note.updated).toLocaleDateString('fa-AF')}
+                  ${new Date(note.updated)
+                    .toLocaleDateString('fa-AF')}
                 </div>
               </div>
             `).join('')
+
             ||
+
             '<p class="muted">هنوز یادداشتی نداری.</p>'
           }
-        </div>
 
+        </div>
       </aside>
 
       <section class="note-editor">
@@ -316,9 +435,16 @@ function notes() {
 
               <div class="note-actions">
 
-                <button onclick="saveNote()">ذخیره</button>
+                <button onclick="saveNote()">
+                  ذخیره
+                </button>
 
-                <button class="danger" onclick="deleteNote()">حذف</button>
+                <button
+                  class="danger"
+                  onclick="deleteNote()"
+                >
+                  حذف
+                </button>
 
               </div>
             `
@@ -396,7 +522,9 @@ function saveNote() {
 }
 
 function deleteNote() {
-  if (!confirm('این یادداشت حذف شود؟')) return;
+  if (!confirm('این یادداشت حذف شود؟')) {
+    return;
+  }
 
   let list = JSON.parse(
     localStorage.getItem('murtaza_notes') || '[]'
@@ -411,7 +539,9 @@ function deleteNote() {
     JSON.stringify(list)
   );
 
-  currentNote = list.length ? list[0].id : null;
+  currentNote = list.length
+    ? list[0].id
+    : null;
 
   notes();
 }
@@ -425,7 +555,9 @@ function growth() {
       <div class="card">
         <h3>🧠 ذهن، هوش و تفکر</h3>
 
-        <p>مدیریت ذهن و هوش</p>
+        <p>
+          مدیریت ذهن و هوش
+        </p>
 
         <button onclick="readBook('4150')">
           📖 مطالعه
@@ -450,7 +582,9 @@ function growth() {
 function knowledge() {
   const categories = [
     ...new Set(
-      books.map(book => book[2].split(' / ')[0])
+      books.map(
+        book => book[2].split(' / ')[0]
+      )
     )
   ];
 
@@ -511,14 +645,12 @@ if (themeButton) {
   };
 }
 
-if (localStorage.getItem('murtaza_dark') === 'true') {
+if (
+  localStorage.getItem('murtaza_dark') === 'true'
+) {
   document.documentElement.classList.add('dark');
 }
 
 /* شروع */
 render();
 ```
-
-**الان فقط همین کار را بکن:** کل `app.js` قبلی را پاک کن → این کد را کامل جایگزین کن → **Commit changes** بزن.
-
-بعد سایت را با **Ctrl + F5** باز کن و کتاب **15803** را امتحان کن. لینک جدید به الگوی `/Book/15803` تغییر کرده است.
