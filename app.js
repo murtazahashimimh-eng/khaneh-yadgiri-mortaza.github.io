@@ -269,8 +269,7 @@ function filterBooks(value) {
 }
 
 /* =========================
-   مطالعه کتاب
-   برای تمام کتاب‌ها یکسان
+   مطالعه مستقیم کتاب
 ========================= */
 
 function readBook(id) {
@@ -284,94 +283,21 @@ function readBook(id) {
     return;
   }
 
-  app.innerHTML = `
-    <section>
-
-      <button
-        class="back"
-        onclick="go('library')"
-      >
-        ← بازگشت به کتابخانه
-      </button>
-
-      <h2>
-        📖 ${escapeHtml(book[1])}
-      </h2>
-
-      <div
-        class="card"
-        style="
-          padding:0;
-          overflow:hidden;
-          margin-top:20px;
-        "
-      >
-
-        <div
-          id="bookMarker"
-          style="
-            width:100%;
-            min-height:710px;
-          "
-        ></div>
-
-      </div>
-
-    </section>
-  `;
-
   /*
-    کد زیر عمداً همان ساختاری را استفاده می‌کند
-    که قائمیه برای نمایش کتاب در سایت و وبلاگ
-    ارائه کرده است.
-  */
+   * لینک واقعی مطالعه آنلاین قائمیه
+   *
+   * /Book/ID = صفحه مشخصات کتاب
+   *
+   * /read/fa-IR/ID = صفحه مطالعه آنلاین
+   *
+   * اینجا مستقیماً به صفحه مطالعه می‌رویم.
+   */
 
-  (function () {
+  const readerUrl =
+    'https://www.ghbook.ir/read/fa-IR/' +
+    encodeURIComponent(id);
 
-    var ifrm =
-      document.createElement('iframe');
-
-    ifrm.setAttribute(
-      'id',
-      'ifrm'
-    );
-
-    var marker =
-      document.getElementById(
-        'bookMarker'
-      );
-
-    if (!marker) {
-      alert('خطا در ایجاد صفحه مطالعه کتاب.');
-      return;
-    }
-
-    marker.parentNode.insertBefore(
-      ifrm,
-      marker
-    );
-
-    ifrm.setAttribute(
-      'src',
-      'https://www.ghbook.ir/read/fa-IR/' +
-      encodeURIComponent(id)
-    );
-
-    ifrm.style.width = '100%';
-    ifrm.style.minHeight = '710px';
-    ifrm.style.height = '85vh';
-    ifrm.style.border = '0px';
-    ifrm.style.margin = '5px 0';
-    ifrm.style.display = 'block';
-
-    ifrm.setAttribute(
-      'allowfullscreen',
-      ''
-    );
-
-  })();
-
-  window.scrollTo(0, 0);
+  window.location.href = readerUrl;
 }
 
 /* =========================
