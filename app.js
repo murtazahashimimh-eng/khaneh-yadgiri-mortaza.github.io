@@ -1,22 +1,505 @@
-const books=[
-['5788','عوامل جاودانگی ژرف‌ترین حماسه تاریخ','تاریخ و جغرافیا'],['12466','انسان کلید اسرار هستی','تاریخ و جغرافیا'],['7413','سیستم ادراکی، احساسی و فکری انسان از دیدگاه قرآن و حدیث','تاریخ و جغرافیا'],['704','توحید مفضل، ترجمه علامه مجلسی','تاریخ و جغرافیا'],['2034','زندگی برزخی و ارتباط با برزخ‌نشینان','تاریخ و جغرافیا'],['4464','عدالت مهدوی و فلسفه تاریخ','تاریخ و جغرافیا'],
-['4150','مدیریت ذهن و هوش','رشد فردی و خودشناسی / ذهن، هوش و تفکر'],['569','داستان‌هایی از گریه بر امام حسین علیه‌السلام','مناسبت‌ها / عزاداری'],['19232','حفظ حرمت‌ها در فصل بهار','مناسبت‌ها / ماه رمضان'],['16804','بهار طاعت: گلچین سخنرانی‌های حرم مطهر رضوی با موضوع ماه مبارک رمضان','مناسبت‌ها / ماه رمضان'],['17483','آموزه‌هایی از واپسین روزهای حیات پیامبر (صلی الله علیه و آله)','مناسبت‌ها / اعیاد / عید غدیر خم'],['11903','آینه غدیر در روایت شیعه و اهل سنت','مناسبت‌ها / اعیاد / عید غدیر خم'],['13400','خاطرات یک روز آسمانی: گزارش‌هایی از برپایی مراسم نیمه شعبان','مناسبت‌ها / اعیاد / نیمه شعبان'],
-['15803','از قرآن شفا بگیریم (خواص آیات و سور قرآن کریم)','اخلاق و تربیت اسلامی / ثواب و عقاب'],['678','حق‌الناس در محیط کار و زندگی','اخلاق و تربیت اسلامی / ثواب و عقاب'],['17505','اخلاق در نهج‌البلاغه','اخلاق و تربیت اسلامی / اخلاق در تعلیم و تعلم'],['15166','بایدها و نبایدها در قرآن کریم','اخلاق و تربیت اسلامی / اخلاق در تعلیم و تعلم'],
-['16682','اعتدال','معصومین (ع) / حضرت علی (ع)'],['8338','ابعاد شخصیت علی علیه‌السلام','معصومین (ع) / حضرت علی (ع)'],['20239','اسلام در عصر دانش','معصومین (ع) / حضرت علی (ع)'],['9360','تاریخ امام حسین علیه‌السلام — موسوعة الامام الحسین علیه‌السلام','معصومین (ع) / امام حسین (ع)'],['17493','آخرین دولت','معصومین (ع) / حضرت صاحب‌الزمان (عج)'],['336','اهل‌بیت علیهم‌السلام — عرشیان فرش‌نشین','معصومین (ع) / اهل‌بیت (ع)'],['5316','مناظره‌ای از امام جواد (علیه‌السلام)','معصومین (ع) / امام جواد (ع)'],['2253','آشنایی با نرم‌افزارهای مفید','مهارت‌های کامپیوتری'],['17692','مهارت‌های ارتباطی','مهارت‌های کاری و اداری']];
-const app=document.getElementById('app');let page='home', currentNote=null;const $=s=>document.querySelector(s);
-function go(p){page=p;render();scrollTo(0,0)}
-function render(){document.querySelectorAll('nav button[data-page]').forEach(b=>b.classList.toggle('active',b.dataset.page===page));if(page==='home')home();else if(page==='library')library();else if(page==='notes')notes();else if(page==='growth')growth();else knowledge()}
-function home(){app.innerHTML=`<section class="hero"><div><h2>امروز برای مرتضی</h2><p>یک خانه برای مطالعه، فکر کردن، یاد گرفتن و ساختن شخصیت واقعی خودت؛ آرام، پیوسته و بدون نمایش برای دیگران.</p><div class="actions"><button class="primary" onclick="go('library')">شروع مطالعه</button><button class="primary" onclick="go('notes')">نوشتن یادداشت</button></div></div><div class="quote"><b>یادآوری امروز</b><div>«من در لحظه زندگی می‌کنم، نه برای تصویر ساختن در ذهن مردم.»</div><hr><div>وقار · شخصیت · اطمینان به نفس</div></div></section><section class="section"><h2>شروع سریع</h2><div class="cards"><div class="card"><h3>📚 کتابخانه</h3><p class="muted">کتاب‌ها را بر اساس موضوع پیدا کن و مطالعه را شروع کن.</p></div><div class="card"><h3>📝 یادداشت‌ها</h3><p class="muted">هرچه از مطالعه می‌آموزی همین‌جا ثبت و ذخیره کن.</p></div><div class="card"><h3>🌱 رشد فردی</h3><p class="muted">برای ساختن ذهن و شخصیت بهتر، مطالعه را پیوسته نگه دار.</p></div></div></section>`}
-function library(){app.innerHTML=`<h2>📚 کتابخانه</h2><p class="muted">تعداد کتاب‌های درج‌شده: ${books.length}</p><div class="toolbar"><input id="search" class="input search" placeholder="جستجوی نام کتاب..." oninput="filterBooks()"></div><div id="books" class="cards"></div>`;drawBooks(books)}
-function drawBooks(arr){$('#books').innerHTML=arr.map(b=>`<article class="card book"><div><div class="chips"><span class="chip">${b[2].split(' / ')[0]}</span></div><h3>${b[1]}</h3><div class="muted">شناسه: ${b[0]}</div></div><button class="open" onclick="readBook('${b[0]}')">باز کردن کتاب</button></article>`).join('')||'<div class="card">کتابی پیدا نشد.</div>'}
-function filterBooks(){let q=$('#search').value.trim();drawBooks(books.filter(b=>(b[1]+' '+b[2]).includes(q)))}
-function readBook(id){let b=books.find(x=>x[0]===id);app.innerHTML=`<button class="back" onclick="go('library')">← بازگشت به کتابخانه</button><h2>${b[1]}</h2><div class="reader"><iframe src="https://www.ghbook.ir/read/fa-IR/${id}" title="${b[1]}"></iframe></div>`}
-function notes(){let ns=JSON.parse(localStorage.getItem('murtaza_notes')||'[]');if(!currentNote&&ns[0])currentNote=ns[0].id;if(!ns.length)currentNote=null;app.innerHTML=`<h2>📝 یادداشت‌های من</h2><p class="muted">یادداشت‌ها به‌صورت خودکار در همین مرورگر ذخیره می‌شوند.</p><div class="note-layout"><aside class="note-list"><button onclick="newNote()">＋ یادداشت جدید</button><div id="noteList">${ns.map(n=>`<div class="note-item ${n.id===currentNote?'sel':''}" onclick="selectNote('${n.id}')"><b>${n.title||'بدون عنوان'}</b><div class="muted">${new Date(n.updated).toLocaleDateString('fa-AF')}</div></div>`).join('')||'<p class="muted">هنوز یادداشتی نداری.</p>'}</div></aside><section class="note-editor">${currentNote?`<input id="nt" class="input" placeholder="عنوان یادداشت" value="${esc(ns.find(n=>n.id===currentNote)?.title||'')}"><textarea id="nb" placeholder="مطالبی را که می‌خوانی اینجا بنویس...">${esc(ns.find(n=>n.id===currentNote)?.body||'')}</textarea><div class="note-actions"><button onclick="saveNote()">ذخیره</button><button class="danger" onclick="deleteNote()">حذف</button></div>`:'<div class="muted">برای شروع، «یادداشت جدید» را بزن.</div>'}</section></div>`}
-function esc(s){return String(s||'').replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll('"','&quot;')}
-function newNote(){let ns=JSON.parse(localStorage.getItem('murtaza_notes')||'[]');let n={id:Date.now().toString(),title:'یادداشت جدید',body:'',updated:Date.now()};ns.unshift(n);localStorage.setItem('murtaza_notes',JSON.stringify(ns));currentNote=n.id;notes()}
-function selectNote(id){currentNote=id;notes()}
-function saveNote(){let ns=JSON.parse(localStorage.getItem('murtaza_notes')||'[]'),n=ns.find(x=>x.id===currentNote);if(!n)return;n.title=$('#nt').value;n.body=$('#nb').value;n.updated=Date.now();localStorage.setItem('murtaza_notes',JSON.stringify(ns));notes()}
-function deleteNote(){if(!confirm('این یادداشت حذف شود؟'))return;let ns=JSON.parse(localStorage.getItem('murtaza_notes')||'[]').filter(x=>x.id!==currentNote);localStorage.setItem('murtaza_notes',JSON.stringify(ns));currentNote=ns[0]?.id||null;notes()}
-function growth(){app.innerHTML=`<h2>🌱 رشد فردی و خودشناسی</h2><div class="cards"><div class="card"><h3>ذهن، هوش و تفکر</h3><p>مدیریت ذهن و هوش</p><button onclick="readBook('4150')">مطالعه</button></div><div class="card"><h3>تمرین روزانه</h3><p class="muted">هر روز یک چیز کوچک یاد بگیر، یک نکته بنویس و آن را در عمل ببین.</p></div></div>`}
-function knowledge(){let cats=[...new Set(books.map(b=>b[2].split(' / ')[0]))];app.innerHTML=`<h2>📖 دانش و مطالعه</h2><p class="muted">موضوعات اصلی خانه یادگیری</p><div class="cards">${cats.map(c=>`<div class="card"><h3>${c}</h3><p class="muted">${books.filter(b=>b[2].startsWith(c)).length} عنوان</p><button onclick="go('library')">رفتن به کتابخانه</button></div>`).join('')}</div>`}
-document.querySelectorAll('nav button[data-page]').forEach(b=>b.onclick=()=>go(b.dataset.page));$('#theme').onclick=()=>{document.documentElement.classList.toggle('dark');localStorage.setItem('murtaza_dark',document.documentElement.classList.contains('dark'))};if(localStorage.getItem('murtaza_dark')==='true')document.documentElement.classList.add('dark');render();
+```javascript
+const books = [
+  ['5788','عوامل جاودانگی ژرف‌ترین حماسه تاریخ','تاریخ و جغرافیا'],
+  ['12466','انسان کلید اسرار هستی','تاریخ و جغرافیا'],
+  ['7413','سیستم ادراکی، احساسی و فکری انسان از دیدگاه قرآن و حدیث','تاریخ و جغرافیا'],
+  ['704','توحید مفضل، ترجمه علامه مجلسی','تاریخ و جغرافیا'],
+  ['2034','زندگی برزخی و ارتباط با برزخ‌نشینان','تاریخ و جغرافیا'],
+  ['4464','عدالت مهدوی و فلسفه تاریخ','تاریخ و جغرافیا'],
+
+  ['4150','مدیریت ذهن و هوش','رشد فردی و خودشناسی / ذهن، هوش و تفکر'],
+
+  ['569','داستان‌هایی از گریه بر امام حسین علیه‌السلام','مناسبت‌ها / عزاداری'],
+  ['19232','حفظ حرمت‌ها در فصل بهار','مناسبت‌ها / ماه رمضان'],
+  ['16804','بهار طاعت: گلچین سخنرانی‌های حرم مطهر رضوی با موضوع ماه مبارک رمضان','مناسبت‌ها / ماه رمضان'],
+  ['17483','آموزه‌هایی از واپسین روزهای حیات پیامبر (صلی الله علیه و آله)','مناسبت‌ها / اعیاد / عید غدیر خم'],
+  ['11903','آینه غدیر در روایت شیعه و اهل سنت','مناسبت‌ها / اعیاد / عید غدیر خم'],
+  ['13400','خاطرات یک روز آسمانی: گزارش‌هایی از برپایی مراسم نیمه شعبان','مناسبت‌ها / اعیاد / نیمه شعبان'],
+
+  ['15803','از قرآن شفا بگیریم (خواص آیات و سور قرآن کریم)','اخلاق و تربیت اسلامی / ثواب و عقاب'],
+  ['678','حق‌الناس در محیط کار و زندگی','اخلاق و تربیت اسلامی / ثواب و عقاب'],
+  ['17505','اخلاق در نهج‌البلاغه','اخلاق و تربیت اسلامی / اخلاق در تعلیم و تعلم'],
+  ['15166','بایدها و نبایدها در قرآن کریم','اخلاق و تربیت اسلامی / اخلاق در تعلیم و تعلم'],
+
+  ['16682','اعتدال','معصومین (ع) / حضرت علی (ع)'],
+  ['8338','ابعاد شخصیت علی علیه‌السلام','معصومین (ع) / حضرت علی (ع)'],
+  ['20239','اسلام در عصر دانش','معصومین (ع) / حضرت علی (ع)'],
+  ['9360','تاریخ امام حسین علیه‌السلام — موسوعة الامام الحسین علیه‌السلام','معصومین (ع) / امام حسین (ع)'],
+  ['17493','آخرین دولت','معصومین (ع) / حضرت صاحب‌الزمان (عج)'],
+  ['336','اهل‌بیت علیهم‌السلام — عرشیان فرش‌نشین','معصومین (ع) / اهل‌بیت (ع)'],
+  ['5316','مناظره‌ای از امام جواد (علیه‌السلام)','معصومین (ع) / امام جواد (ع)'],
+
+  ['2253','آشنایی با نرم‌افزارهای مفید','مهارت‌های کامپیوتری'],
+  ['17692','مهارت‌های ارتباطی','مهارت‌های کاری و اداری']
+];
+
+const app = document.getElementById('app');
+let page = 'home';
+let currentNote = null;
+
+const $ = s => document.querySelector(s);
+
+function go(p) {
+  page = p;
+  render();
+  window.scrollTo(0, 0);
+}
+
+function render() {
+  document.querySelectorAll('nav button[data-page]').forEach(b => {
+    b.classList.toggle('active', b.dataset.page === page);
+  });
+
+  if (page === 'home') home();
+  else if (page === 'library') library();
+  else if (page === 'notes') notes();
+  else if (page === 'growth') growth();
+  else knowledge();
+}
+
+function home() {
+  app.innerHTML = `
+    <section class="hero">
+      <div>
+        <h2>امروز برای مرتضی</h2>
+        <p>
+          یک خانه برای مطالعه، فکر کردن، یاد گرفتن و ساختن شخصیت واقعی خودت؛
+          آرام، پیوسته و بدون نمایش برای دیگران.
+        </p>
+
+        <div class="actions">
+          <button class="primary" onclick="go('library')">شروع مطالعه</button>
+          <button class="primary" onclick="go('notes')">نوشتن یادداشت</button>
+        </div>
+      </div>
+
+      <div class="quote">
+        <b>یادآوری امروز</b>
+        <div>«من در لحظه زندگی می‌کنم، نه برای تصویر ساختن در ذهن مردم.»</div>
+        <hr>
+        <div>وقار · شخصیت · اطمینان به نفس</div>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>شروع سریع</h2>
+
+      <div class="cards">
+        <div class="card">
+          <h3>📚 کتابخانه</h3>
+          <p class="muted">
+            کتاب‌ها را بر اساس موضوع پیدا کن و مطالعه را شروع کن.
+          </p>
+          <button onclick="go('library')">رفتن به کتابخانه</button>
+        </div>
+
+        <div class="card">
+          <h3>📝 یادداشت‌ها</h3>
+          <p class="muted">
+            هرچه از مطالعه می‌آموزی همین‌جا ثبت و ذخیره کن.
+          </p>
+          <button onclick="go('notes')">یادداشت‌ها</button>
+        </div>
+
+        <div class="card">
+          <h3>🌱 رشد فردی</h3>
+          <p class="muted">
+            برای ساختن ذهن و شخصیت بهتر، مطالعه را پیوسته نگه دار.
+          </p>
+          <button onclick="go('growth')">رشد فردی</button>
+        </div>
+      </div>
+    </section>
+  `;
+}
+
+function library() {
+  app.innerHTML = `
+    <h2>📚 کتابخانه</h2>
+
+    <p class="muted">
+      تعداد کتاب‌های درج‌شده: ${books.length}
+    </p>
+
+    <div class="toolbar">
+      <input
+        id="search"
+        class="input search"
+        placeholder="جستجوی نام کتاب یا موضوع..."
+        oninput="filterBooks()"
+      >
+    </div>
+
+    <div id="books" class="cards"></div>
+  `;
+
+  drawBooks(books);
+}
+
+function drawBooks(arr) {
+  const box = $('#books');
+
+  if (!arr.length) {
+    box.innerHTML = `
+      <div class="card">
+        کتابی با این مشخصات پیدا نشد.
+      </div>
+    `;
+    return;
+  }
+
+  box.innerHTML = arr.map(b => `
+    <article class="card book">
+
+      <div>
+        <div class="chips">
+          <span class="chip">${b[2].split(' / ')[0]}</span>
+        </div>
+
+        <h3>${b[1]}</h3>
+
+        <div class="muted">
+          شناسه کتاب: ${b[0]}
+        </div>
+
+        <div class="muted">
+          ${b[2]}
+        </div>
+      </div>
+
+      <button class="open" onclick="readBook('${b[0]}')">
+        📖 باز کردن کتاب
+      </button>
+
+    </article>
+  `).join('');
+}
+
+function filterBooks() {
+  const q = $('#search').value.trim().toLowerCase();
+
+  const result = books.filter(b =>
+    (b[1] + ' ' + b[2]).toLowerCase().includes(q)
+  );
+
+  drawBooks(result);
+}
+
+/*
+  باز کردن کتاب
+
+  قبلاً کتاب داخل iframe باز می‌شد.
+  بعضی سایت‌ها اجازه نمایش داخل iframe را نمی‌دهند.
+  اکنون کتاب مستقیماً در یک صفحه جدید باز می‌شود.
+*/
+function readBook(id) {
+  const b = books.find(x => x[0] === id);
+
+  if (!b) {
+    alert('کتاب پیدا نشد.');
+    return;
+  }
+
+  const url = `https://www.ghbook.ir/read/fa-IR/${id}`;
+
+  app.innerHTML = `
+    <button class="back" onclick="go('library')">
+      ← بازگشت به کتابخانه
+    </button>
+
+    <h2>📖 ${b[1]}</h2>
+
+    <div class="card" style="text-align:center;padding:35px">
+
+      <div style="font-size:48px;margin-bottom:15px">
+        📚
+      </div>
+
+      <h3>${b[1]}</h3>
+
+      <p class="muted">
+        برای مطالعه کتاب، روی دکمه زیر بزن.
+      </p>
+
+      <button
+        class="primary"
+        onclick="window.open('${url}','_blank','noopener,noreferrer')"
+      >
+        📖 باز کردن کتاب
+      </button>
+
+      <p class="muted" style="margin-top:20px">
+        اگر صفحه کتاب در همین مرورگر باز نشد،
+        اجازه باز شدن پنجره جدید را فعال کن.
+      </p>
+
+    </div>
+  `;
+}
+
+function notes() {
+  let ns = JSON.parse(
+    localStorage.getItem('murtaza_notes') || '[]'
+  );
+
+  if (!currentNote && ns[0]) {
+    currentNote = ns[0].id;
+  }
+
+  if (!ns.length) {
+    currentNote = null;
+  }
+
+  const selected = ns.find(n => n.id === currentNote);
+
+  app.innerHTML = `
+    <h2>📝 یادداشت‌های من</h2>
+
+    <p class="muted">
+      یادداشت‌ها به‌صورت خودکار در همین مرورگر ذخیره می‌شوند.
+    </p>
+
+    <div class="note-layout">
+
+      <aside class="note-list">
+
+        <button onclick="newNote()">
+          ＋ یادداشت جدید
+        </button>
+
+        <div id="noteList">
+
+          ${
+            ns.map(n => `
+              <div
+                class="note-item ${n.id === currentNote ? 'sel' : ''}"
+                onclick="selectNote('${n.id}')"
+              >
+                <b>${n.title || 'بدون عنوان'}</b>
+
+                <div class="muted">
+                  ${new Date(n.updated).toLocaleDateString('fa-AF')}
+                </div>
+              </div>
+            `).join('')
+
+            ||
+
+            '<p class="muted">هنوز یادداشتی نداری.</p>'
+          }
+
+        </div>
+
+      </aside>
+
+      <section class="note-editor">
+
+        ${
+          selected
+
+          ?
+
+          `
+          <input
+            id="nt"
+            class="input"
+            placeholder="عنوان یادداشت"
+            value="${esc(selected.title || '')}"
+          >
+
+          <textarea
+            id="nb"
+            placeholder="مطالبی را که می‌خوانی اینجا بنویس..."
+          >${esc(selected.body || '')}</textarea>
+
+          <div class="note-actions">
+            <button onclick="saveNote()">ذخیره</button>
+            <button class="danger" onclick="deleteNote()">حذف</button>
+          </div>
+          `
+
+          :
+
+          `
+          <div class="muted">
+            برای شروع، «یادداشت جدید» را بزن.
+          </div>
+          `
+        }
+
+      </section>
+    </div>
+  `;
+}
+
+function esc(s) {
+  return String(s || '')
+    .replaceAll('&', '&amp;')
+    .replaceAll('<', '&lt;')
+    .replaceAll('>', '&gt;')
+    .replaceAll('"', '&quot;');
+}
+
+function newNote() {
+  let ns = JSON.parse(
+    localStorage.getItem('murtaza_notes') || '[]'
+  );
+
+  let n = {
+    id: Date.now().toString(),
+    title: 'یادداشت جدید',
+    body: '',
+    updated: Date.now()
+  };
+
+  ns.unshift(n);
+
+  localStorage.setItem(
+    'murtaza_notes',
+    JSON.stringify(ns)
+  );
+
+  currentNote = n.id;
+
+  notes();
+}
+
+function selectNote(id) {
+  currentNote = id;
+  notes();
+}
+
+function saveNote() {
+  let ns = JSON.parse(
+    localStorage.getItem('murtaza_notes') || '[]'
+  );
+
+  let n = ns.find(x => x.id === currentNote);
+
+  if (!n) return;
+
+  n.title = $('#nt').value;
+  n.body = $('#nb').value;
+  n.updated = Date.now();
+
+  localStorage.setItem(
+    'murtaza_notes',
+    JSON.stringify(ns)
+  );
+
+  notes();
+}
+
+function deleteNote() {
+  if (!confirm('این یادداشت حذف شود؟')) return;
+
+  let ns = JSON.parse(
+    localStorage.getItem('murtaza_notes') || '[]'
+  ).filter(x => x.id !== currentNote);
+
+  localStorage.setItem(
+    'murtaza_notes',
+    JSON.stringify(ns)
+  );
+
+  currentNote = ns[0]?.id || null;
+
+  notes();
+}
+
+function growth() {
+  app.innerHTML = `
+    <h2>🌱 رشد فردی و خودشناسی</h2>
+
+    <div class="cards">
+
+      <div class="card">
+        <h3>🧠 ذهن، هوش و تفکر</h3>
+
+        <p>
+          مدیریت ذهن و هوش
+        </p>
+
+        <button onclick="readBook('4150')">
+          📖 مطالعه
+        </button>
+      </div>
+
+      <div class="card">
+
+        <h3>🌱 تمرین روزانه</h3>
+
+        <p class="muted">
+          هر روز یک چیز کوچک یاد بگیر،
+          یک نکته بنویس و آن را در عمل ببین.
+        </p>
+
+      </div>
+
+    </div>
+  `;
+}
+
+function knowledge() {
+  const cats = [
+    ...new Set(
+      books.map(b => b[2].split(' / ')[0])
+    )
+  ];
+
+  app.innerHTML = `
+    <h2>📖 دانش و مطالعه</h2>
+
+    <p class="muted">
+      موضوعات اصلی خانه یادگیری
+    </p>
+
+    <div class="cards">
+
+      ${cats.map(c => `
+        <div class="card">
+
+          <h3>${c}</h3>
+
+          <p class="muted">
+            ${books.filter(b => b[2].startsWith(c)).length}
+            عنوان
+          </p>
+
+          <button onclick="go('library')">
+            رفتن به کتابخانه
+          </button>
+
+        </div>
+      `).join('')}
+
+    </div>
+  `;
+}
+
+/* منوی اصلی */
+document
+  .querySelectorAll('nav button[data-page]')
+  .forEach(b => {
+    b.onclick = () => go(b.dataset.page);
+  });
+
+/* حالت تاریک */
+$('#theme').onclick = () => {
+  document.documentElement.classList.toggle('dark');
+
+  localStorage.setItem(
+    'murtaza_dark',
+    document.documentElement.classList.contains('dark')
+  );
+};
+
+if (
+  localStorage.getItem('murtaza_dark') === 'true'
+) {
+  document.documentElement.classList.add('dark');
+}
+
+/* شروع برنامه */
+render();
+```
