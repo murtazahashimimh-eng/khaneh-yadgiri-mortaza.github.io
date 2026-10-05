@@ -28,13 +28,17 @@ const books = [
   ['17692','مهارت‌های ارتباطی','مهارت‌های کاری و اداری']
 ];
 
-const app = document.getElementById('app');
-
+let app = null;
 let page = 'home';
 let currentNote = null;
 
-function $(selector) {
-  return document.querySelector(selector);
+function escapeHtml(value) {
+  return String(value ?? '')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
 }
 
 function go(newPage) {
@@ -44,15 +48,26 @@ function go(newPage) {
 }
 
 function render() {
+  if (!app) return;
+
   document.querySelectorAll('nav button[data-page]').forEach(button => {
-    button.classList.toggle('active', button.dataset.page === page);
+    button.classList.toggle(
+      'active',
+      button.dataset.page === page
+    );
   });
 
-  if (page === 'home') home();
-  else if (page === 'library') library();
-  else if (page === 'notes') notes();
-  else if (page === 'growth') growth();
-  else if (page === 'knowledge') knowledge();
+  if (page === 'home') {
+    home();
+  } else if (page === 'library') {
+    library();
+  } else if (page === 'notes') {
+    notes();
+  } else if (page === 'growth') {
+    growth();
+  } else if (page === 'knowledge') {
+    knowledge();
+  }
 }
 
 function home() {
@@ -60,6 +75,7 @@ function home() {
     <section class="hero">
       <div>
         <h2>امروز برای مرتضی</h2>
+
         <p>
           یک خانه برای مطالعه، فکر کردن، یاد گرفتن و ساختن
           شخصیت واقعی خودت؛ آرام، پیوسته و بدون نمایش برای دیگران.
@@ -146,7 +162,7 @@ function library() {
 
       <div class="toolbar">
         <input
-          id="search"
+          id="bookSearch"
           class="input search"
           type="search"
           placeholder="جستجوی نام کتاب یا موضوع..."
@@ -157,10 +173,12 @@ function library() {
     </section>
   `;
 
-  const search = document.getElementById('search');
+  const search = document.getElementById('bookSearch');
 
   if (search) {
-    search.addEventListener('input', filterBooks);
+    search.addEventListener('input', function () {
+      filterBooks(this.value);
+    });
   }
 
   drawBooks(books);
@@ -169,7 +187,9 @@ function library() {
 function drawBooks(list) {
   const box = document.getElementById('books');
 
-  if (!box) return;
+  if (!box) {
+    return;
+  }
 
   if (!Array.isArray(list) || list.length === 0) {
     box.innerHTML = `
@@ -184,10 +204,13 @@ function drawBooks(list) {
   }
 
   box.innerHTML = list.map(book => {
+
     const id = escapeHtml(book[0]);
     const title = escapeHtml(book[1]);
     const category = escapeHtml(book[2]);
-    const mainCategory = escapeHtml(book[2].split(' / ')[0]);
+    const mainCategory = escapeHtml(
+      book[2].split(' / ')[0]
+    );
 
     return `
       <article class="card book">
@@ -222,16 +245,18 @@ function drawBooks(list) {
   }).join('');
 }
 
-function filterBooks() {
-  const input = document.getElementById('search');
-
-  if (!input) return;
-
-  const query = input.value.trim().toLowerCase();
+function filterBooks(value) {
+  const query = String(value || '')
+    .trim()
+    .toLowerCase();
 
   const result = books.filter(book => {
-    const text =
-      `${book[0]} ${book[1]} ${book[2]}`.toLowerCase();
+
+    const text = [
+      book[0],
+      book[1],
+      book[2]
+    ].join(' ').toLowerCase();
 
     return text.includes(query);
   });
@@ -244,7 +269,9 @@ function filterBooks() {
 ========================= */
 
 function readBook(id) {
-  const book = books.find(item => item[0] === id);
+  const book = books.find(
+    item => item[0] === id
+  );
 
   if (!book) {
     alert('کتاب پیدا نشد.');
@@ -252,6 +279,7 @@ function readBook(id) {
   }
 
   if (id === '15803') {
+
     app.innerHTML = `
       <button
         class="back"
@@ -262,7 +290,10 @@ function readBook(id) {
 
       <h2>📖 ${escapeHtml(book[1])}</h2>
 
-      <div class="card" style="text-align:center;padding:35px">
+      <div
+        class="card"
+        style="text-align:center;padding:35px"
+      >
 
         <div style="font-size:52px">
           📚
@@ -311,7 +342,9 @@ function readBook(id) {
     return;
   }
 
-  const url = 'https://www.ghbook.ir/Book/' + encodeURIComponent(id);
+  const url =
+    'https://www.ghbook.ir/Book/' +
+    encodeURIComponent(id);
 
   app.innerHTML = `
     <button
@@ -323,7 +356,10 @@ function readBook(id) {
 
     <h2>📖 ${escapeHtml(book[1])}</h2>
 
-    <div class="card" style="text-align:center;padding:35px">
+    <div
+      class="card"
+      style="text-align:center;padding:35px"
+    >
 
       <div style="font-size:48px">
         📚
@@ -349,7 +385,11 @@ function readBook(id) {
 }
 
 function openExternalBook(url) {
-  window.open(url, '_blank', 'noopener,noreferrer');
+  window.open(
+    url,
+    '_blank',
+    'noopener,noreferrer'
+  );
 }
 
 function openBookOfficial() {
@@ -431,12 +471,15 @@ function notes() {
                   onclick="selectNote('${escapeHtml(note.id)}')"
                 >
                   <b>
-                    ${escapeHtml(note.title || 'بدون عنوان')}
+                    ${escapeHtml(
+                      note.title || 'بدون عنوان'
+                    )}
                   </b>
 
                   <div class="muted">
-                    ${new Date(note.updated)
-                      .toLocaleDateString('fa-AF')}
+                    ${new Date(
+                      note.updated
+                    ).toLocaleDateString('fa-AF')}
                   </div>
                 </div>
               `).join('')
@@ -455,13 +498,17 @@ function notes() {
                 id="nt"
                 class="input"
                 placeholder="عنوان یادداشت"
-                value="${escapeHtml(selected.title || '')}"
+                value="${escapeHtml(
+                  selected.title || ''
+                )}"
               >
 
               <textarea
                 id="nb"
                 placeholder="مطالبی را که می‌خوانی اینجا بنویس..."
-              >${escapeHtml(selected.body || '')}</textarea>
+              >${escapeHtml(
+                selected.body || ''
+              )}</textarea>
 
               <div class="note-actions">
 
@@ -523,8 +570,11 @@ function saveNote() {
 
   if (!note) return;
 
-  const title = document.getElementById('nt');
-  const body = document.getElementById('nb');
+  const title =
+    document.getElementById('nt');
+
+  const body =
+    document.getElementById('nb');
 
   note.title = title ? title.value : '';
   note.body = body ? body.value : '';
@@ -599,6 +649,7 @@ function growth() {
 ========================= */
 
 function knowledge() {
+
   const categories = [
     ...new Set(
       books.map(
@@ -625,7 +676,9 @@ function knowledge() {
         return `
           <div class="card">
 
-            <h3>${escapeHtml(category)}</h3>
+            <h3>
+              ${escapeHtml(category)}
+            </h3>
 
             <p class="muted">
               ${count} عنوان
@@ -639,6 +692,7 @@ function knowledge() {
 
           </div>
         `;
+
       }).join('')}
 
     </div>
@@ -646,6 +700,7 @@ function knowledge() {
 }
 
 function openCategory(category) {
+
   page = 'library';
 
   render();
@@ -654,7 +709,8 @@ function openCategory(category) {
     book => book[2].startsWith(category)
   );
 
-  const search = document.getElementById('search');
+  const search =
+    document.getElementById('bookSearch');
 
   if (search) {
     search.value = category;
@@ -666,23 +722,12 @@ function openCategory(category) {
 }
 
 /* =========================
-   امنیت متن
-========================= */
-
-function escapeHtml(value) {
-  return String(value ?? '')
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;')
-    .replace(/'/g, '&#039;');
-}
-
-/* =========================
    شروع برنامه
 ========================= */
 
 function initializeApp() {
+
+  app = document.getElementById('app');
 
   if (!app) {
     console.error(
@@ -695,9 +740,12 @@ function initializeApp() {
     .querySelectorAll('nav button[data-page]')
     .forEach(button => {
 
-      button.addEventListener('click', () => {
-        go(button.dataset.page);
-      });
+      button.addEventListener(
+        'click',
+        function () {
+          go(this.dataset.page);
+        }
+      );
 
     });
 
@@ -708,7 +756,7 @@ function initializeApp() {
 
     themeButton.addEventListener(
       'click',
-      () => {
+      function () {
 
         document.documentElement
           .classList.toggle('dark');
@@ -727,19 +775,29 @@ function initializeApp() {
   if (
     localStorage.getItem('murtaza_dark') === 'true'
   ) {
+
     document.documentElement
       .classList
       .add('dark');
+
   }
 
   render();
 }
 
+/* =========================
+   اجرای برنامه
+========================= */
+
 if (document.readyState === 'loading') {
+
   document.addEventListener(
     'DOMContentLoaded',
     initializeApp
   );
+
 } else {
+
   initializeApp();
+
 }
