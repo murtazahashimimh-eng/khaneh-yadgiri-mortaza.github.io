@@ -1,4 +1,3 @@
-```javascript
 const books = [
   ['5788','عوامل جاودانگی ژرف‌ترین حماسه تاریخ','تاریخ و جغرافیا'],
   ['12466','انسان کلید اسرار هستی','تاریخ و جغرافیا'],
@@ -34,27 +33,33 @@ const books = [
 ];
 
 const app = document.getElementById('app');
+
 let page = 'home';
 let currentNote = null;
 
-const $ = s => document.querySelector(s);
+const $ = selector => document.querySelector(selector);
 
-function go(p) {
-  page = p;
+function go(newPage) {
+  page = newPage;
   render();
   window.scrollTo(0, 0);
 }
 
 function render() {
-  document.querySelectorAll('nav button[data-page]').forEach(b => {
-    b.classList.toggle('active', b.dataset.page === page);
-  });
+  document
+    .querySelectorAll('nav button[data-page]')
+    .forEach(button => {
+      button.classList.toggle(
+        'active',
+        button.dataset.page === page
+      );
+    });
 
   if (page === 'home') home();
   else if (page === 'library') library();
   else if (page === 'notes') notes();
   else if (page === 'growth') growth();
-  else knowledge();
+  else if (page === 'knowledge') knowledge();
 }
 
 function home() {
@@ -62,22 +67,35 @@ function home() {
     <section class="hero">
       <div>
         <h2>امروز برای مرتضی</h2>
+
         <p>
-          یک خانه برای مطالعه، فکر کردن، یاد گرفتن و ساختن شخصیت واقعی خودت؛
-          آرام، پیوسته و بدون نمایش برای دیگران.
+          یک خانه برای مطالعه، فکر کردن، یاد گرفتن و ساختن
+          شخصیت واقعی خودت؛ آرام، پیوسته و بدون نمایش برای دیگران.
         </p>
 
         <div class="actions">
-          <button class="primary" onclick="go('library')">شروع مطالعه</button>
-          <button class="primary" onclick="go('notes')">نوشتن یادداشت</button>
+          <button class="primary" onclick="go('library')">
+            شروع مطالعه
+          </button>
+
+          <button class="primary" onclick="go('notes')">
+            نوشتن یادداشت
+          </button>
         </div>
       </div>
 
       <div class="quote">
         <b>یادآوری امروز</b>
-        <div>«من در لحظه زندگی می‌کنم، نه برای تصویر ساختن در ذهن مردم.»</div>
+
+        <div>
+          «من در لحظه زندگی می‌کنم، نه برای تصویر ساختن در ذهن مردم.»
+        </div>
+
         <hr>
-        <div>وقار · شخصیت · اطمینان به نفس</div>
+
+        <div>
+          وقار · شخصیت · اطمینان به نفس
+        </div>
       </div>
     </section>
 
@@ -85,12 +103,16 @@ function home() {
       <h2>شروع سریع</h2>
 
       <div class="cards">
+
         <div class="card">
           <h3>📚 کتابخانه</h3>
           <p class="muted">
             کتاب‌ها را بر اساس موضوع پیدا کن و مطالعه را شروع کن.
           </p>
-          <button onclick="go('library')">رفتن به کتابخانه</button>
+
+          <button onclick="go('library')">
+            رفتن به کتابخانه
+          </button>
         </div>
 
         <div class="card">
@@ -98,7 +120,10 @@ function home() {
           <p class="muted">
             هرچه از مطالعه می‌آموزی همین‌جا ثبت و ذخیره کن.
           </p>
-          <button onclick="go('notes')">یادداشت‌ها</button>
+
+          <button onclick="go('notes')">
+            یادداشت‌ها
+          </button>
         </div>
 
         <div class="card">
@@ -106,8 +131,12 @@ function home() {
           <p class="muted">
             برای ساختن ذهن و شخصیت بهتر، مطالعه را پیوسته نگه دار.
           </p>
-          <button onclick="go('growth')">رشد فردی</button>
+
+          <button onclick="go('growth')">
+            رشد فردی
+          </button>
         </div>
+
       </div>
     </section>
   `;
@@ -136,38 +165,45 @@ function library() {
   drawBooks(books);
 }
 
-function drawBooks(arr) {
+function drawBooks(list) {
   const box = $('#books');
 
-  if (!arr.length) {
+  if (!box) return;
+
+  if (!list.length) {
     box.innerHTML = `
       <div class="card">
-        کتابی با این مشخصات پیدا نشد.
+        کتابی پیدا نشد.
       </div>
     `;
     return;
   }
 
-  box.innerHTML = arr.map(b => `
+  box.innerHTML = list.map(book => `
     <article class="card book">
 
       <div>
         <div class="chips">
-          <span class="chip">${b[2].split(' / ')[0]}</span>
+          <span class="chip">
+            ${book[2].split(' / ')[0]}
+          </span>
         </div>
 
-        <h3>${b[1]}</h3>
+        <h3>${book[1]}</h3>
 
         <div class="muted">
-          شناسه کتاب: ${b[0]}
+          شناسه: ${book[0]}
         </div>
 
         <div class="muted">
-          ${b[2]}
+          ${book[2]}
         </div>
       </div>
 
-      <button class="open" onclick="readBook('${b[0]}')">
+      <button
+        class="open"
+        onclick="readBook('${book[0]}')"
+      >
         📖 باز کردن کتاب
       </button>
 
@@ -176,87 +212,99 @@ function drawBooks(arr) {
 }
 
 function filterBooks() {
-  const q = $('#search').value.trim().toLowerCase();
+  const input = $('#search');
 
-  const result = books.filter(b =>
-    (b[1] + ' ' + b[2]).toLowerCase().includes(q)
-  );
+  if (!input) return;
+
+  const query = input.value
+    .trim()
+    .toLowerCase();
+
+  const result = books.filter(book => {
+    const text = (
+      book[1] +
+      ' ' +
+      book[2] +
+      ' ' +
+      book[0]
+    ).toLowerCase();
+
+    return text.includes(query);
+  });
 
   drawBooks(result);
 }
 
-/*
-  باز کردن کتاب
-
-  قبلاً کتاب داخل iframe باز می‌شد.
-  بعضی سایت‌ها اجازه نمایش داخل iframe را نمی‌دهند.
-  اکنون کتاب مستقیماً در یک صفحه جدید باز می‌شود.
-*/
 function readBook(id) {
-  const b = books.find(x => x[0] === id);
+  const book = books.find(item => item[0] === id);
 
-  if (!b) {
+  if (!book) {
     alert('کتاب پیدا نشد.');
     return;
   }
 
-  const url = `https://www.ghbook.ir/read/fa-IR/${id}`;
+  const url =
+    'https://www.ghbook.ir/read/fa-IR/' + id;
 
   app.innerHTML = `
-    <button class="back" onclick="go('library')">
+    <button
+      class="back"
+      onclick="go('library')"
+    >
       ← بازگشت به کتابخانه
     </button>
 
-    <h2>📖 ${b[1]}</h2>
+    <h2>📖 ${book[1]}</h2>
 
     <div class="card" style="text-align:center;padding:35px">
 
-      <div style="font-size:48px;margin-bottom:15px">
+      <div style="font-size:48px">
         📚
       </div>
 
-      <h3>${b[1]}</h3>
+      <h3>${book[1]}</h3>
 
       <p class="muted">
-        برای مطالعه کتاب، روی دکمه زیر بزن.
+        شناسه کتاب: ${book[0]}
+      </p>
+
+      <p class="muted">
+        برای مطالعه، دکمه زیر را بزن.
       </p>
 
       <button
         class="primary"
-        onclick="window.open('${url}','_blank','noopener,noreferrer')"
+        onclick="window.open('${url}', '_blank')"
       >
-        📖 باز کردن کتاب
+        📖 مطالعه کتاب
       </button>
-
-      <p class="muted" style="margin-top:20px">
-        اگر صفحه کتاب در همین مرورگر باز نشد،
-        اجازه باز شدن پنجره جدید را فعال کن.
-      </p>
 
     </div>
   `;
 }
 
 function notes() {
-  let ns = JSON.parse(
+  let list = JSON.parse(
     localStorage.getItem('murtaza_notes') || '[]'
   );
 
-  if (!currentNote && ns[0]) {
-    currentNote = ns[0].id;
+  if (!currentNote && list.length) {
+    currentNote = list[0].id;
   }
 
-  if (!ns.length) {
+  if (!list.length) {
     currentNote = null;
   }
 
-  const selected = ns.find(n => n.id === currentNote);
+  const selected = list.find(
+    note => note.id === currentNote
+  );
 
   app.innerHTML = `
     <h2>📝 یادداشت‌های من</h2>
 
     <p class="muted">
-      یادداشت‌ها به‌صورت خودکار در همین مرورگر ذخیره می‌شوند.
+      یادداشت‌ها در همین مرورگر ذخیره می‌شوند.
     </p>
 
     <div class="note-layout">
@@ -270,15 +318,20 @@ function notes() {
         <div id="noteList">
 
           ${
-            ns.map(n => `
+            list.map(note => `
               <div
-                class="note-item ${n.id === currentNote ? 'sel' : ''}"
-                onclick="selectNote('${n.id}')"
+                class="note-item ${
+                  note.id === currentNote ? 'sel' : ''
+                }"
+                onclick="selectNote('${note.id}')"
               >
-                <b>${n.title || 'بدون عنوان'}</b>
+                <b>
+                  ${note.title || 'بدون عنوان'}
+                </b>
 
                 <div class="muted">
-                  ${new Date(n.updated).toLocaleDateString('fa-AF')}
+                  ${new Date(note.updated)
+                    .toLocaleDateString('fa-AF')}
                 </div>
               </div>
             `).join('')
@@ -289,51 +342,55 @@ function notes() {
           }
 
         </div>
-
       </aside>
 
       <section class="note-editor">
 
         ${
           selected
+            ? `
+              <input
+                id="nt"
+                class="input"
+                placeholder="عنوان یادداشت"
+                value="${escapeHtml(selected.title || '')}"
+              >
 
-          ?
+              <textarea
+                id="nb"
+                placeholder="مطالبی را که می‌خوانی اینجا بنویس..."
+              >${escapeHtml(selected.body || '')}</textarea>
 
-          `
-          <input
-            id="nt"
-            class="input"
-            placeholder="عنوان یادداشت"
-            value="${esc(selected.title || '')}"
-          >
+              <div class="note-actions">
 
-          <textarea
-            id="nb"
-            placeholder="مطالبی را که می‌خوانی اینجا بنویس..."
-          >${esc(selected.body || '')}</textarea>
+                <button onclick="saveNote()">
+                  ذخیره
+                </button>
 
-          <div class="note-actions">
-            <button onclick="saveNote()">ذخیره</button>
-            <button class="danger" onclick="deleteNote()">حذف</button>
-          </div>
-          `
+                <button
+                  class="danger"
+                  onclick="deleteNote()"
+                >
+                  حذف
+                </button>
 
-          :
-
-          `
-          <div class="muted">
-            برای شروع، «یادداشت جدید» را بزن.
-          </div>
-          `
+              </div>
+            `
+            : `
+              <div class="muted">
+                برای شروع، «یادداشت جدید» را بزن.
+              </div>
+            `
         }
 
       </section>
+
     </div>
   `;
 }
 
-function esc(s) {
-  return String(s || '')
+function escapeHtml(value) {
+  return String(value || '')
     .replaceAll('&', '&amp;')
     .replaceAll('<', '&lt;')
     .replaceAll('>', '&gt;')
@@ -341,25 +398,25 @@ function esc(s) {
 }
 
 function newNote() {
-  let ns = JSON.parse(
+  const list = JSON.parse(
     localStorage.getItem('murtaza_notes') || '[]'
   );
 
-  let n = {
+  const note = {
     id: Date.now().toString(),
     title: 'یادداشت جدید',
     body: '',
     updated: Date.now()
   };
 
-  ns.unshift(n);
+  list.unshift(note);
 
   localStorage.setItem(
     'murtaza_notes',
-    JSON.stringify(ns)
+    JSON.stringify(list)
   );
 
-  currentNote = n.id;
+  currentNote = note.id;
 
   notes();
 }
@@ -370,39 +427,49 @@ function selectNote(id) {
 }
 
 function saveNote() {
-  let ns = JSON.parse(
+  const list = JSON.parse(
     localStorage.getItem('murtaza_notes') || '[]'
   );
 
-  let n = ns.find(x => x.id === currentNote);
+  const note = list.find(
+    item => item.id === currentNote
+  );
 
-  if (!n) return;
+  if (!note) return;
 
-  n.title = $('#nt').value;
-  n.body = $('#nb').value;
-  n.updated = Date.now();
+  note.title = $('#nt').value;
+  note.body = $('#nb').value;
+  note.updated = Date.now();
 
   localStorage.setItem(
     'murtaza_notes',
-    JSON.stringify(ns)
+    JSON.stringify(list)
   );
 
   notes();
 }
 
 function deleteNote() {
-  if (!confirm('این یادداشت حذف شود؟')) return;
+  if (!confirm('این یادداشت حذف شود؟')) {
+    return;
+  }
 
-  let ns = JSON.parse(
+  let list = JSON.parse(
     localStorage.getItem('murtaza_notes') || '[]'
-  ).filter(x => x.id !== currentNote);
+  );
+
+  list = list.filter(
+    note => note.id !== currentNote
+  );
 
   localStorage.setItem(
     'murtaza_notes',
-    JSON.stringify(ns)
+    JSON.stringify(list)
   );
 
-  currentNote = ns[0]?.id || null;
+  currentNote = list.length
+    ? list[0].id
+    : null;
 
   notes();
 }
@@ -441,9 +508,11 @@ function growth() {
 }
 
 function knowledge() {
-  const cats = [
+  const categories = [
     ...new Set(
-      books.map(b => b[2].split(' / ')[0])
+      books.map(
+        book => book[2].split(' / ')[0]
+      )
     )
   ];
 
@@ -456,13 +525,17 @@ function knowledge() {
 
     <div class="cards">
 
-      ${cats.map(c => `
+      ${categories.map(category => `
         <div class="card">
 
-          <h3>${c}</h3>
+          <h3>${category}</h3>
 
           <p class="muted">
-            ${books.filter(b => b[2].startsWith(c)).length}
+            ${
+              books.filter(
+                book => book[2].startsWith(category)
+              ).length
+            }
             عنوان
           </p>
 
@@ -480,19 +553,25 @@ function knowledge() {
 /* منوی اصلی */
 document
   .querySelectorAll('nav button[data-page]')
-  .forEach(b => {
-    b.onclick = () => go(b.dataset.page);
+  .forEach(button => {
+    button.onclick = () => {
+      go(button.dataset.page);
+    };
   });
 
 /* حالت تاریک */
-$('#theme').onclick = () => {
-  document.documentElement.classList.toggle('dark');
+const themeButton = $('#theme');
 
-  localStorage.setItem(
-    'murtaza_dark',
-    document.documentElement.classList.contains('dark')
-  );
-};
+if (themeButton) {
+  themeButton.onclick = () => {
+    document.documentElement.classList.toggle('dark');
+
+    localStorage.setItem(
+      'murtaza_dark',
+      document.documentElement.classList.contains('dark')
+    );
+  };
+}
 
 if (
   localStorage.getItem('murtaza_dark') === 'true'
@@ -500,6 +579,5 @@ if (
   document.documentElement.classList.add('dark');
 }
 
-/* شروع برنامه */
+/* شروع */
 render();
-```
