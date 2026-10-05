@@ -70,6 +70,10 @@ function render() {
   }
 }
 
+/* =========================
+   صفحه اصلی
+========================= */
+
 function home() {
   app.innerHTML = `
     <section class="hero">
@@ -265,7 +269,8 @@ function filterBooks(value) {
 }
 
 /* =========================
-   مطالعه مستقیم کتاب
+   مطالعه کتاب
+   برای تمام کتاب‌ها یکسان
 ========================= */
 
 function readBook(id) {
@@ -278,10 +283,6 @@ function readBook(id) {
     alert('کتاب پیدا نشد.');
     return;
   }
-
-  const readerUrl =
-    'https://www.ghbook.ir/read/fa-IR/' +
-    encodeURIComponent(id);
 
   app.innerHTML = `
     <section>
@@ -297,38 +298,78 @@ function readBook(id) {
         📖 ${escapeHtml(book[1])}
       </h2>
 
-      <p class="muted">
-        در حال بارگذاری نسخه مطالعه کتاب...
-      </p>
-
       <div
         class="card"
         style="
           padding:0;
           overflow:hidden;
-          margin-top:15px;
+          margin-top:20px;
         "
       >
 
-        <iframe
-          id="bookReader"
-          src="${readerUrl}"
+        <div
+          id="bookMarker"
           style="
             width:100%;
-            min-height:80vh;
-            height:850px;
-            border:0;
-            display:block;
-            background:white;
+            min-height:710px;
           "
-          title="${escapeHtml(book[1])}"
-          allowfullscreen
-        ></iframe>
+        ></div>
 
       </div>
 
     </section>
   `;
+
+  /*
+    کد زیر عمداً همان ساختاری را استفاده می‌کند
+    که قائمیه برای نمایش کتاب در سایت و وبلاگ
+    ارائه کرده است.
+  */
+
+  (function () {
+
+    var ifrm =
+      document.createElement('iframe');
+
+    ifrm.setAttribute(
+      'id',
+      'ifrm'
+    );
+
+    var marker =
+      document.getElementById(
+        'bookMarker'
+      );
+
+    if (!marker) {
+      alert('خطا در ایجاد صفحه مطالعه کتاب.');
+      return;
+    }
+
+    marker.parentNode.insertBefore(
+      ifrm,
+      marker
+    );
+
+    ifrm.setAttribute(
+      'src',
+      'https://www.ghbook.ir/read/fa-IR/' +
+      encodeURIComponent(id)
+    );
+
+    ifrm.style.width = '100%';
+    ifrm.style.minHeight = '710px';
+    ifrm.style.height = '85vh';
+    ifrm.style.border = '0px';
+    ifrm.style.margin = '5px 0';
+    ifrm.style.display = 'block';
+
+    ifrm.setAttribute(
+      'allowfullscreen',
+      ''
+    );
+
+  })();
 
   window.scrollTo(0, 0);
 }
