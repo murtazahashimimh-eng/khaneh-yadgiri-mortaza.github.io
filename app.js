@@ -265,22 +265,11 @@ function filterBooks(value) {
 }
 
 /* =========================
-   مطالعه کتاب
+   مطالعه مستقیم کتاب
 ========================= */
 
-/*
-  نکته مهم:
-  برای همه کتاب‌ها از مسیر مستقیم مطالعه استفاده می‌شود:
-
-  https://www.ghbook.ir/read/fa-IR/شناسه
-
-  مثال:
-  https://www.ghbook.ir/read/fa-IR/12466
-
-  دیگر از /Book/ استفاده نمی‌شود.
-*/
-
 function readBook(id) {
+
   const book = books.find(
     item => item[0] === id
   );
@@ -290,15 +279,58 @@ function readBook(id) {
     return;
   }
 
-  const url =
+  const readerUrl =
     'https://www.ghbook.ir/read/fa-IR/' +
     encodeURIComponent(id);
 
-  window.open(
-    url,
-    '_blank',
-    'noopener,noreferrer'
-  );
+  app.innerHTML = `
+    <section>
+
+      <button
+        class="back"
+        onclick="go('library')"
+      >
+        ← بازگشت به کتابخانه
+      </button>
+
+      <h2>
+        📖 ${escapeHtml(book[1])}
+      </h2>
+
+      <p class="muted">
+        در حال بارگذاری نسخه مطالعه کتاب...
+      </p>
+
+      <div
+        class="card"
+        style="
+          padding:0;
+          overflow:hidden;
+          margin-top:15px;
+        "
+      >
+
+        <iframe
+          id="bookReader"
+          src="${readerUrl}"
+          style="
+            width:100%;
+            min-height:80vh;
+            height:850px;
+            border:0;
+            display:block;
+            background:white;
+          "
+          title="${escapeHtml(book[1])}"
+          allowfullscreen
+        ></iframe>
+
+      </div>
+
+    </section>
+  `;
+
+  window.scrollTo(0, 0);
 }
 
 /* =========================
