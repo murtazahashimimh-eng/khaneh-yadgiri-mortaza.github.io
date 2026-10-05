@@ -284,20 +284,35 @@ function readBook(id) {
   }
 
   /*
-   * لینک واقعی مطالعه آنلاین قائمیه
+   * مسیر واقعی مطالعه آنلاین قائمیه
    *
    * /Book/ID = صفحه مشخصات کتاب
    *
-   * /read/fa-IR/ID = صفحه مطالعه آنلاین
-   *
-   * اینجا مستقیماً به صفحه مطالعه می‌رویم.
+   * /read/fa-IR/ID = Reader واقعی کتاب
    */
 
   const readerUrl =
     'https://www.ghbook.ir/read/fa-IR/' +
     encodeURIComponent(id);
 
-  window.location.href = readerUrl;
+  /*
+   * Reader را در تب جدید باز می‌کنیم.
+   * صفحه اصلی خانه یادگیری باقی می‌ماند.
+   */
+
+  const newWindow = window.open(
+    readerUrl,
+    '_blank'
+  );
+
+  /*
+   * اگر مرورگر بازکردن تب جدید را مسدود کرد،
+   * همان صفحه را باز می‌کنیم.
+   */
+
+  if (!newWindow) {
+    window.location.href = readerUrl;
+  }
 }
 
 /* =========================
