@@ -268,6 +268,18 @@ function filterBooks(value) {
    مطالعه کتاب
 ========================= */
 
+/*
+  نکته مهم:
+  برای همه کتاب‌ها از مسیر مستقیم مطالعه استفاده می‌شود:
+
+  https://www.ghbook.ir/read/fa-IR/شناسه
+
+  مثال:
+  https://www.ghbook.ir/read/fa-IR/12466
+
+  دیگر از /Book/ استفاده نمی‌شود.
+*/
+
 function readBook(id) {
   const book = books.find(
     item => item[0] === id
@@ -278,131 +290,12 @@ function readBook(id) {
     return;
   }
 
-  if (id === '15803') {
-
-    app.innerHTML = `
-      <button
-        class="back"
-        onclick="go('library')"
-      >
-        ← بازگشت به کتابخانه
-      </button>
-
-      <h2>📖 ${escapeHtml(book[1])}</h2>
-
-      <div
-        class="card"
-        style="text-align:center;padding:35px"
-      >
-
-        <div style="font-size:52px">
-          📚
-        </div>
-
-        <h3>
-          ${escapeHtml(book[1])}
-        </h3>
-
-        <p class="muted">
-          نویسنده: سید محمد حسینی بهارانچی
-        </p>
-
-        <p class="muted">
-          برای مطالعه، یکی از گزینه‌های زیر را انتخاب کن.
-        </p>
-
-        <div
-          style="
-            display:flex;
-            flex-wrap:wrap;
-            gap:12px;
-            justify-content:center;
-            margin-top:25px;
-          "
-        >
-
-          <button
-            class="primary"
-            onclick="openBookOfficial()"
-          >
-            📖 نسخه قائمیه
-          </button>
-
-          <button
-            onclick="openBookAlternative()"
-          >
-            📚 نسخه جایگزین
-          </button>
-
-        </div>
-
-      </div>
-    `;
-
-    return;
-  }
-
   const url =
-    'https://www.ghbook.ir/Book/' +
+    'https://www.ghbook.ir/read/fa-IR/' +
     encodeURIComponent(id);
 
-  app.innerHTML = `
-    <button
-      class="back"
-      onclick="go('library')"
-    >
-      ← بازگشت به کتابخانه
-    </button>
-
-    <h2>📖 ${escapeHtml(book[1])}</h2>
-
-    <div
-      class="card"
-      style="text-align:center;padding:35px"
-    >
-
-      <div style="font-size:48px">
-        📚
-      </div>
-
-      <h3>
-        ${escapeHtml(book[1])}
-      </h3>
-
-      <p class="muted">
-        شناسه کتاب: ${escapeHtml(book[0])}
-      </p>
-
-      <button
-        class="primary"
-        onclick="openExternalBook('${url}')"
-      >
-        📖 مطالعه کتاب
-      </button>
-
-    </div>
-  `;
-}
-
-function openExternalBook(url) {
   window.open(
     url,
-    '_blank',
-    'noopener,noreferrer'
-  );
-}
-
-function openBookOfficial() {
-  window.open(
-    'https://www.ghbook.ir/Book/15803',
-    '_blank',
-    'noopener,noreferrer'
-  );
-}
-
-function openBookAlternative() {
-  window.open(
-    'https://www.scribd.com/document/937913982/Az-Quran-Shafa-Bigirim-Softgozar-com',
     '_blank',
     'noopener,noreferrer'
   );
