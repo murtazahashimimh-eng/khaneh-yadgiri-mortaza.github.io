@@ -1,4 +1,3 @@
-```javascript
 const books = [
   ['5788','عوامل جاودانگی ژرف‌ترین حماسه تاریخ','تاریخ و جغرافیا'],
   ['12466','انسان کلید اسرار هستی','تاریخ و جغرافیا'],
@@ -8,19 +7,16 @@ const books = [
   ['4464','عدالت مهدوی و فلسفه تاریخ','تاریخ و جغرافیا'],
 
   ['4150','مدیریت ذهن و هوش','رشد فردی و خودشناسی / ذهن، هوش و تفکر'],
-
   ['569','داستان‌هایی از گریه بر امام حسین علیه‌السلام','مناسبت‌ها / عزاداری'],
   ['19232','حفظ حرمت‌ها در فصل بهار','مناسبت‌ها / ماه رمضان'],
   ['16804','بهار طاعت: گلچین سخنرانی‌های حرم مطهر رضوی با موضوع ماه مبارک رمضان','مناسبت‌ها / ماه رمضان'],
   ['17483','آموزه‌هایی از واپسین روزهای حیات پیامبر (صلی الله علیه و آله)','مناسبت‌ها / اعیاد / عید غدیر خم'],
   ['11903','آینه غدیر در روایت شیعه و اهل سنت','مناسبت‌ها / اعیاد / عید غدیر خم'],
   ['13400','خاطرات یک روز آسمانی: گزارش‌هایی از برپایی مراسم نیمه شعبان','مناسبت‌ها / اعیاد / نیمه شعبان'],
-
   ['15803','از قرآن شفا بگیریم (خواص آیات و سور قرآن کریم)','اخلاق و تربیت اسلامی / ثواب و عقاب'],
   ['678','حق‌الناس در محیط کار و زندگی','اخلاق و تربیت اسلامی / ثواب و عقاب'],
   ['17505','اخلاق در نهج‌البلاغه','اخلاق و تربیت اسلامی / اخلاق در تعلیم و تعلم'],
   ['15166','بایدها و نبایدها در قرآن کریم','اخلاق و تربیت اسلامی / اخلاق در تعلیم و تعلم'],
-
   ['16682','اعتدال','معصومین (ع) / حضرت علی (ع)'],
   ['8338','ابعاد شخصیت علی علیه‌السلام','معصومین (ع) / حضرت علی (ع)'],
   ['20239','اسلام در عصر دانش','معصومین (ع) / حضرت علی (ع)'],
@@ -28,7 +24,6 @@ const books = [
   ['17493','آخرین دولت','معصومین (ع) / حضرت صاحب‌الزمان (عج)'],
   ['336','اهل‌بیت علیهم‌السلام — عرشیان فرش‌نشین','معصومین (ع) / اهل‌بیت (ع)'],
   ['5316','مناظره‌ای از امام جواد (علیه‌السلام)','معصومین (ع) / امام جواد (ع)'],
-
   ['2253','آشنایی با نرم‌افزارهای مفید','مهارت‌های کامپیوتری'],
   ['17692','مهارت‌های ارتباطی','مهارت‌های کاری و اداری']
 ];
@@ -38,7 +33,9 @@ const app = document.getElementById('app');
 let page = 'home';
 let currentNote = null;
 
-const $ = selector => document.querySelector(selector);
+function $(selector) {
+  return document.querySelector(selector);
+}
 
 function go(newPage) {
   page = newPage;
@@ -104,7 +101,6 @@ function home() {
           <p class="muted">
             کتاب‌ها را بر اساس موضوع پیدا کن و مطالعه را شروع کن.
           </p>
-
           <button onclick="go('library')">
             رفتن به کتابخانه
           </button>
@@ -115,7 +111,6 @@ function home() {
           <p class="muted">
             هرچه از مطالعه می‌آموزی همین‌جا ثبت و ذخیره کن.
           </p>
-
           <button onclick="go('notes')">
             یادداشت‌ها
           </button>
@@ -126,7 +121,6 @@ function home() {
           <p class="muted">
             برای ساختن ذهن و شخصیت بهتر، مطالعه را پیوسته نگه دار.
           </p>
-
           <button onclick="go('growth')">
             رشد فردی
           </button>
@@ -137,88 +131,107 @@ function home() {
   `;
 }
 
+/* =========================
+   کتابخانه
+========================= */
+
 function library() {
   app.innerHTML = `
-    <h2>📚 کتابخانه</h2>
+    <section>
+      <h2>📚 کتابخانه</h2>
 
-    <p class="muted">
-      تعداد کتاب‌های درج‌شده: ${books.length}
-    </p>
+      <p class="muted">
+        تعداد کتاب‌های درج‌شده: ${books.length}
+      </p>
 
-    <div class="toolbar">
-      <input
-        id="search"
-        class="input search"
-        placeholder="جستجوی نام کتاب یا موضوع..."
-        oninput="filterBooks()"
-      >
-    </div>
+      <div class="toolbar">
+        <input
+          id="search"
+          class="input search"
+          type="search"
+          placeholder="جستجوی نام کتاب یا موضوع..."
+        >
+      </div>
 
-    <div id="books" class="cards"></div>
+      <div id="books" class="cards"></div>
+    </section>
   `;
+
+  const search = document.getElementById('search');
+
+  if (search) {
+    search.addEventListener('input', filterBooks);
+  }
 
   drawBooks(books);
 }
 
 function drawBooks(list) {
-  const box = $('#books');
+  const box = document.getElementById('books');
 
   if (!box) return;
 
-  if (!list.length) {
+  if (!Array.isArray(list) || list.length === 0) {
     box.innerHTML = `
       <div class="card">
-        کتابی پیدا نشد.
+        <h3>کتابی پیدا نشد.</h3>
+        <p class="muted">
+          عبارت دیگری را جستجو کن.
+        </p>
       </div>
     `;
     return;
   }
 
-  box.innerHTML = list.map(book => `
-    <article class="card book">
+  box.innerHTML = list.map(book => {
+    const id = escapeHtml(book[0]);
+    const title = escapeHtml(book[1]);
+    const category = escapeHtml(book[2]);
+    const mainCategory = escapeHtml(book[2].split(' / ')[0]);
 
-      <div>
-        <div class="chips">
-          <span class="chip">
-            ${book[2].split(' / ')[0]}
-          </span>
+    return `
+      <article class="card book">
+
+        <div>
+          <div class="chips">
+            <span class="chip">
+              ${mainCategory}
+            </span>
+          </div>
+
+          <h3>${title}</h3>
+
+          <div class="muted">
+            شناسه: ${id}
+          </div>
+
+          <div class="muted">
+            ${category}
+          </div>
         </div>
 
-        <h3>${book[1]}</h3>
+        <button
+          class="open"
+          onclick="readBook('${id}')"
+        >
+          📖 باز کردن کتاب
+        </button>
 
-        <div class="muted">
-          شناسه: ${book[0]}
-        </div>
-
-        <div class="muted">
-          ${book[2]}
-        </div>
-      </div>
-
-      <button
-        class="open"
-        onclick="readBook('${book[0]}')"
-      >
-        📖 باز کردن کتاب
-      </button>
-
-    </article>
-  `).join('');
+      </article>
+    `;
+  }).join('');
 }
 
 function filterBooks() {
-  const input = $('#search');
+  const input = document.getElementById('search');
 
   if (!input) return;
 
   const query = input.value.trim().toLowerCase();
 
   const result = books.filter(book => {
-    const text = (
-      book[1] + ' ' +
-      book[2] + ' ' +
-      book[0]
-    ).toLowerCase();
+    const text =
+      `${book[0]} ${book[1]} ${book[2]}`.toLowerCase();
 
     return text.includes(query);
   });
@@ -226,7 +239,10 @@ function filterBooks() {
   drawBooks(result);
 }
 
-/* صفحه مطالعه */
+/* =========================
+   مطالعه کتاب
+========================= */
+
 function readBook(id) {
   const book = books.find(item => item[0] === id);
 
@@ -235,7 +251,6 @@ function readBook(id) {
     return;
   }
 
-  /* کتاب 15803 */
   if (id === '15803') {
     app.innerHTML = `
       <button
@@ -245,7 +260,7 @@ function readBook(id) {
         ← بازگشت به کتابخانه
       </button>
 
-      <h2>📖 ${book[1]}</h2>
+      <h2>📖 ${escapeHtml(book[1])}</h2>
 
       <div class="card" style="text-align:center;padding:35px">
 
@@ -254,7 +269,7 @@ function readBook(id) {
         </div>
 
         <h3>
-          ${book[1]}
+          ${escapeHtml(book[1])}
         </h3>
 
         <p class="muted">
@@ -290,21 +305,13 @@ function readBook(id) {
 
         </div>
 
-        <p
-          class="muted"
-          style="margin-top:20px"
-        >
-          اگر نسخه قائمیه در شبکه شما باز نشد،
-          نسخه جایگزین را امتحان کن.
-        </p>
-
       </div>
     `;
+
     return;
   }
 
-  /* سایر کتاب‌ها */
-  const url = 'https://www.ghbook.ir/Book/' + id;
+  const url = 'https://www.ghbook.ir/Book/' + encodeURIComponent(id);
 
   app.innerHTML = `
     <button
@@ -314,7 +321,7 @@ function readBook(id) {
       ← بازگشت به کتابخانه
     </button>
 
-    <h2>📖 ${book[1]}</h2>
+    <h2>📖 ${escapeHtml(book[1])}</h2>
 
     <div class="card" style="text-align:center;padding:35px">
 
@@ -322,15 +329,17 @@ function readBook(id) {
         📚
       </div>
 
-      <h3>${book[1]}</h3>
+      <h3>
+        ${escapeHtml(book[1])}
+      </h3>
 
       <p class="muted">
-        شناسه کتاب: ${book[0]}
+        شناسه کتاب: ${escapeHtml(book[0])}
       </p>
 
       <button
         class="primary"
-        onclick="window.open('${url}', '_blank')"
+        onclick="openExternalBook('${url}')"
       >
         📖 مطالعه کتاب
       </button>
@@ -339,26 +348,49 @@ function readBook(id) {
   `;
 }
 
-/* لینک رسمی قائمیه برای کتاب 15803 */
-function openBookOfficial() {
-  const url =
-    'https://www.ghbook.ir/Book/15803';
-
-  window.open(url, '_blank');
+function openExternalBook(url) {
+  window.open(url, '_blank', 'noopener,noreferrer');
 }
 
-/* نسخه جایگزین آنلاین */
-function openBookAlternative() {
-  const url =
-    'https://www.scribd.com/document/937913982/Az-Quran-Shafa-Bigirim-Softgozar-com';
+function openBookOfficial() {
+  window.open(
+    'https://www.ghbook.ir/Book/15803',
+    '_blank',
+    'noopener,noreferrer'
+  );
+}
 
-  window.open(url, '_blank');
+function openBookAlternative() {
+  window.open(
+    'https://www.scribd.com/document/937913982/Az-Quran-Shafa-Bigirim-Softgozar-com',
+    '_blank',
+    'noopener,noreferrer'
+  );
+}
+
+/* =========================
+   یادداشت‌ها
+========================= */
+
+function getNotes() {
+  try {
+    return JSON.parse(
+      localStorage.getItem('murtaza_notes') || '[]'
+    );
+  } catch (error) {
+    return [];
+  }
+}
+
+function saveNotes(list) {
+  localStorage.setItem(
+    'murtaza_notes',
+    JSON.stringify(list)
+  );
 }
 
 function notes() {
-  let list = JSON.parse(
-    localStorage.getItem('murtaza_notes') || '[]'
-  );
+  const list = getNotes();
 
   if (!currentNote && list.length) {
     currentNote = list[0].id;
@@ -390,27 +422,25 @@ function notes() {
         <div id="noteList">
 
           ${
-            list.map(note => `
-              <div
-                class="note-item ${
-                  note.id === currentNote ? 'sel' : ''
-                }"
-                onclick="selectNote('${note.id}')"
-              >
-                <b>
-                  ${note.title || 'بدون عنوان'}
-                </b>
+            list.length
+              ? list.map(note => `
+                <div
+                  class="note-item ${
+                    note.id === currentNote ? 'sel' : ''
+                  }"
+                  onclick="selectNote('${escapeHtml(note.id)}')"
+                >
+                  <b>
+                    ${escapeHtml(note.title || 'بدون عنوان')}
+                  </b>
 
-                <div class="muted">
-                  ${new Date(note.updated)
-                    .toLocaleDateString('fa-AF')}
+                  <div class="muted">
+                    ${new Date(note.updated)
+                      .toLocaleDateString('fa-AF')}
+                  </div>
                 </div>
-              </div>
-            `).join('')
-
-            ||
-
-            '<p class="muted">هنوز یادداشتی نداری.</p>'
+              `).join('')
+              : '<p class="muted">هنوز یادداشتی نداری.</p>'
           }
 
         </div>
@@ -456,23 +486,12 @@ function notes() {
         }
 
       </section>
-
     </div>
   `;
 }
 
-function escapeHtml(value) {
-  return String(value || '')
-    .replaceAll('&', '&amp;')
-    .replaceAll('<', '&lt;')
-    .replaceAll('>', '&gt;')
-    .replaceAll('"', '&quot;');
-}
-
 function newNote() {
-  const list = JSON.parse(
-    localStorage.getItem('murtaza_notes') || '[]'
-  );
+  const list = getNotes();
 
   const note = {
     id: Date.now().toString(),
@@ -483,10 +502,7 @@ function newNote() {
 
   list.unshift(note);
 
-  localStorage.setItem(
-    'murtaza_notes',
-    JSON.stringify(list)
-  );
+  saveNotes(list);
 
   currentNote = note.id;
 
@@ -499,9 +515,7 @@ function selectNote(id) {
 }
 
 function saveNote() {
-  const list = JSON.parse(
-    localStorage.getItem('murtaza_notes') || '[]'
-  );
+  const list = getNotes();
 
   const note = list.find(
     item => item.id === currentNote
@@ -509,14 +523,14 @@ function saveNote() {
 
   if (!note) return;
 
-  note.title = $('#nt').value;
-  note.body = $('#nb').value;
+  const title = document.getElementById('nt');
+  const body = document.getElementById('nb');
+
+  note.title = title ? title.value : '';
+  note.body = body ? body.value : '';
   note.updated = Date.now();
 
-  localStorage.setItem(
-    'murtaza_notes',
-    JSON.stringify(list)
-  );
+  saveNotes(list);
 
   notes();
 }
@@ -526,18 +540,13 @@ function deleteNote() {
     return;
   }
 
-  let list = JSON.parse(
-    localStorage.getItem('murtaza_notes') || '[]'
-  );
+  let list = getNotes();
 
   list = list.filter(
     note => note.id !== currentNote
   );
 
-  localStorage.setItem(
-    'murtaza_notes',
-    JSON.stringify(list)
-  );
+  saveNotes(list);
 
   currentNote = list.length
     ? list[0].id
@@ -546,6 +555,10 @@ function deleteNote() {
   notes();
 }
 
+/* =========================
+   رشد فردی
+========================= */
+
 function growth() {
   app.innerHTML = `
     <h2>🌱 رشد فردی و خودشناسی</h2>
@@ -553,6 +566,7 @@ function growth() {
     <div class="cards">
 
       <div class="card">
+
         <h3>🧠 ذهن، هوش و تفکر</h3>
 
         <p>
@@ -562,6 +576,7 @@ function growth() {
         <button onclick="readBook('4150')">
           📖 مطالعه
         </button>
+
       </div>
 
       <div class="card">
@@ -578,6 +593,10 @@ function growth() {
     </div>
   `;
 }
+
+/* =========================
+   دانش و مطالعه
+========================= */
 
 function knowledge() {
   const categories = [
@@ -597,60 +616,130 @@ function knowledge() {
 
     <div class="cards">
 
-      ${categories.map(category => `
-        <div class="card">
+      ${categories.map(category => {
 
-          <h3>${category}</h3>
+        const count = books.filter(
+          book => book[2].startsWith(category)
+        ).length;
 
-          <p class="muted">
-            ${
-              books.filter(
-                book => book[2].startsWith(category)
-              ).length
-            }
-            عنوان
-          </p>
+        return `
+          <div class="card">
 
-          <button onclick="go('library')">
-            رفتن به کتابخانه
-          </button>
+            <h3>${escapeHtml(category)}</h3>
 
-        </div>
-      `).join('')}
+            <p class="muted">
+              ${count} عنوان
+            </p>
+
+            <button
+              onclick="openCategory('${escapeHtml(category)}')"
+            >
+              📚 مشاهده کتاب‌ها
+            </button>
+
+          </div>
+        `;
+      }).join('')}
 
     </div>
   `;
 }
 
-/* منوی اصلی */
-document
-  .querySelectorAll('nav button[data-page]')
-  .forEach(button => {
-    button.onclick = () => {
-      go(button.dataset.page);
-    };
-  });
+function openCategory(category) {
+  page = 'library';
 
-/* حالت تاریک */
-const themeButton = $('#theme');
+  render();
 
-if (themeButton) {
-  themeButton.onclick = () => {
-    document.documentElement.classList.toggle('dark');
+  const result = books.filter(
+    book => book[2].startsWith(category)
+  );
 
-    localStorage.setItem(
-      'murtaza_dark',
-      document.documentElement.classList.contains('dark')
+  const search = document.getElementById('search');
+
+  if (search) {
+    search.value = category;
+  }
+
+  drawBooks(result);
+
+  window.scrollTo(0, 0);
+}
+
+/* =========================
+   امنیت متن
+========================= */
+
+function escapeHtml(value) {
+  return String(value ?? '')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
+}
+
+/* =========================
+   شروع برنامه
+========================= */
+
+function initializeApp() {
+
+  if (!app) {
+    console.error(
+      'عنصر #app در index.html پیدا نشد.'
     );
-  };
+    return;
+  }
+
+  document
+    .querySelectorAll('nav button[data-page]')
+    .forEach(button => {
+
+      button.addEventListener('click', () => {
+        go(button.dataset.page);
+      });
+
+    });
+
+  const themeButton =
+    document.getElementById('theme');
+
+  if (themeButton) {
+
+    themeButton.addEventListener(
+      'click',
+      () => {
+
+        document.documentElement
+          .classList.toggle('dark');
+
+        localStorage.setItem(
+          'murtaza_dark',
+          document.documentElement
+            .classList
+            .contains('dark')
+        );
+
+      }
+    );
+  }
+
+  if (
+    localStorage.getItem('murtaza_dark') === 'true'
+  ) {
+    document.documentElement
+      .classList
+      .add('dark');
+  }
+
+  render();
 }
 
-if (
-  localStorage.getItem('murtaza_dark') === 'true'
-) {
-  document.documentElement.classList.add('dark');
+if (document.readyState === 'loading') {
+  document.addEventListener(
+    'DOMContentLoaded',
+    initializeApp
+  );
+} else {
+  initializeApp();
 }
-
-/* شروع */
-render();
-```
